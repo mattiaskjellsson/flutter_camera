@@ -1,16 +1,20 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_camera/widgets/change_camera_button.dart';
+import 'package:flutter_camera/widgets/take_picture_button.dart';
 
 import 'dispay_picture_screen.dart';
+import 'top_bar.dart';
 
 class TakePictureScreen extends StatefulWidget {
   const TakePictureScreen({
     Key? key,
     required this.camera,
+    required this.availableCameras,
   }) : super(key: key);
 
   final CameraDescription camera;
-
+  final List<CameraDescription> availableCameras;
   @override
   TakePictureScreenState createState() => TakePictureScreenState();
 }
@@ -37,6 +41,20 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     super.dispose();
   }
 
+  Future<void> _initCamera(CameraDescription description) async {
+    _controller =
+        CameraController(description, ResolutionPreset.max, enableAudio: true);
+
+    try {
+      await _controller.initialize();
+      // to notify the widgets that camera has been initialized and now camera preview can be done
+      setState(() {});
+      print('wiiiii');
+    } catch (e) {
+      print(e);
+    }
+  }
+
   _toggleFlashState() {
     print('update flash state $_flashState');
 
@@ -51,103 +69,83 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       extendBody: true,
-      appBar: AppBar(
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: IconButton(
-              padding: const EdgeInsets.all(0),
-              alignment: Alignment.centerRight,
-              icon: (_flashState == FlashMode.off
-                  ? Icon(
-                      Icons.flash_off_outlined,
-                      color: Colors.grey[400],
-                      size: 24.0,
-                      semanticLabel: 'Flash on',
-                    )
-                  : Icon(
-                      Icons.flash_on_outlined,
-                      color: Colors.grey[400],
-                      size: 24.0,
-                      semanticLabel: 'Flash off',
-                    )),
-              color: Colors.red[500],
-              onPressed: _toggleFlashState,
-            ),
-          ),
-        ],
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
+      appBar: TopBar(
+        icon: (_flashState == FlashMode.off
+            ? Icon(
+                Icons.flash_off_outlined,
+                color: Colors.grey[400],
+                size: 24.0,
+                semanticLabel: 'Flash on',
+              )
+            : Icon(
+                Icons.flash_on_outlined,
+                color: Colors.grey[400],
+                size: 24.0,
+                semanticLabel: 'Flash off',
+              )),
+        toggleFlashState: _toggleFlashState,
       ),
-      body: Expanded(
-        child: FutureBuilder<void>(
-          future: _initializeControllerFuture,
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.done) {
-              _controller.setFlashMode(_flashState);
-              final scale = 1 /
-                  (_controller.value.aspectRatio *
-                      MediaQuery.of(context).size.aspectRatio);
-              return Transform.scale(
-                scale: scale,
-                alignment: Alignment.topCenter,
-                child: CameraPreview(_controller),
-              );
-            } else {
-              return const Center(child: CircularProgressIndicator());
-            }
-          },
-        ),
-      ),
+      body: _buildBody(),
       bottomNavigationBar: Container(
-        color: Color(0x88dddddd),
+        color: Color(0x88000000),
         height: 100.0,
         child: Expanded(
           child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
-                GestureDetector(
-                  onTap: _takePicture,
-                  child: Container(
-                    height: 80,
-                    width: 80,
-                    decoration: BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.circular(80 / 2),
-                    ),
-                    child: Center(
-                      child: Icon(
-                        Icons.add,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: _changeCamera,
-                  child: Icon(
-                    Icons.change_circle_outlined,
-                    size: 24,
-                  ),
-                ),
+                TakePictureButton(takePicture: _takePicture),
+                ChangeCameraButton(changeCamera: _changeCamera)
               ]),
         ),
       ),
     );
   }
 
-  _changeCamera() {
-    setState(() async {
-      final cameras = await availableCameras();
+  Widget _buildBody() {
+    return Expanded(
+      child: FutureBuilder<void>(
+        future: _initializeControllerFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.done) {
+            _controller.setFlashMode(_flashState);
+            final scale = 1 /
+                (_controller.value.aspectRatio *
+                    MediaQuery.of(context).size.aspectRatio);
+            return Transform.scale(
+              scale: scale,
+              alignment: Alignment.topCenter,
+              child: CameraPreview(_controller),
+            );
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
+    );
+  }
 
-      _camera == cameras.first ? cameras.last : cameras.first;
-      _controller = CameraController(
-        cameras.last,
-        ResolutionPreset.medium,
-      );
-      _initializeControllerFuture = _controller.initialize();
-    });
+  _changeCamera() {
+    // setState(() async {
+    //   final cameras = await availableCameras();
+    //   cameras.forEach((element) {
+    //     print(element.toString());
+    //   });
+
+    //   _camera = _camera.lensDirection == CameraLensDirection.back
+    //       ? cameras.firstWhere(
+    //           (element) => element.lensDirection == CameraLensDirection.front)
+    //       : cameras.firstWhere(
+    //           (element) => element.lensDirection == CameraLensDirection.back);
+
+    //   _controller = CameraController(
+    //     _camera,
+    //     ResolutionPreset.medium,
+    //   );
+
+    //   _initializeControllerFuture = _controller.initialize();
+    // });
+    _toggleCameraLens();
   }
 
   _takePicture() async {
@@ -164,6 +162,30 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       );
     } catch (e) {
       print(e);
+    }
+  }
+
+////////////////////////////
+  void _toggleCameraLens() {
+    try {
+      final lensDirection = _controller.description.lensDirection;
+      print('Current lens direction: ${lensDirection.toString()}');
+      print('----------------------------------------------------------------');
+      widget.availableCameras.forEach((element) {
+        print(element.toString());
+      });
+      print('----------------------------------------------------------------');
+      CameraDescription newDescription =
+          lensDirection == CameraLensDirection.front
+              ? widget.availableCameras.firstWhere((description) =>
+                  description.lensDirection == CameraLensDirection.back)
+              : widget.availableCameras.firstWhere((description) =>
+                  description.lensDirection == CameraLensDirection.front);
+
+      print('New camera description: ${newDescription.toString()}');
+      _initCamera(newDescription);
+    } catch (e) {
+      print(e.toString());
     }
   }
 }

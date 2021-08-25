@@ -5,8 +5,12 @@ import 'widgets/take_picture_screen.dart';
 
 class HomePage extends StatefulWidget {
   final camera;
-  const HomePage({Key? key, required CameraDescription this.camera})
-      : super(key: key);
+  final availableCameras;
+  const HomePage({
+    Key? key,
+    required CameraDescription this.camera,
+    required List<CameraDescription> this.availableCameras,
+  }) : super(key: key);
 
   @override
   _HomePageState createState() => _HomePageState();
@@ -31,8 +35,10 @@ class _HomePageState extends State<HomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) =>
-                              TakePictureScreen(camera: widget.camera)),
+                          builder: (context) => TakePictureScreen(
+                                camera: widget.camera,
+                                availableCameras: widget.availableCameras,
+                              )),
                     );
                   },
                   child: Text("Camera"),

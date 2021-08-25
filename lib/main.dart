@@ -15,7 +15,10 @@ Future<void> main() async {
   runApp(
     MaterialApp(
       theme: ThemeData.light(),
-      home: HomePage(camera: firstCamera),
+      home: HomePage(
+        camera: firstCamera,
+        availableCameras: cameras,
+      ),
       // home: TakePictureScreen(
       //   camera: firstCamera,
       // ),
