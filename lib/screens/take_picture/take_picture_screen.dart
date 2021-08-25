@@ -62,34 +62,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     super.dispose();
   }
 
-  Future<void> _initCamera(CameraDescription description) async {
-    _controller =
-        CameraController(description, ResolutionPreset.max, enableAudio: true);
-
-    try {
-      _initializeControllerFuture = _controller.initialize();
-      setState(() {});
-    } catch (e) {
-      print(e);
-    }
-  }
-
-  _toggleFlashState() {
-    setState(() {
-      switch (_flashState) {
-        case FlashMode.off:
-          _flashState = FlashMode.always;
-          break;
-        case FlashMode.always:
-          _flashState = FlashMode.auto;
-          break;
-        default:
-          _flashState = FlashMode.off;
-          break;
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -126,6 +98,34 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  Future<void> _initCamera(CameraDescription description) async {
+    _controller =
+        CameraController(description, ResolutionPreset.max, enableAudio: true);
+
+    try {
+      _initializeControllerFuture = _controller.initialize();
+      setState(() {});
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  _toggleFlashState() {
+    setState(() {
+      switch (_flashState) {
+        case FlashMode.off:
+          _flashState = FlashMode.always;
+          break;
+        case FlashMode.always:
+          _flashState = FlashMode.auto;
+          break;
+        default:
+          _flashState = FlashMode.off;
+          break;
+      }
+    });
   }
 
   _takePicture() async {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'change_camera_button.dart';
+import 'open_gallery_button.dart';
 import 'take_picture_button.dart';
 
 class BottomBar extends StatelessWidget {
@@ -22,7 +23,7 @@ class BottomBar extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Expanded(
-                child: SizedBox(),
+                child: OpenGalleryButton(openGallery: () {}),
               ),
               TakePictureButton(takePicture: takePicture),
               Expanded(
