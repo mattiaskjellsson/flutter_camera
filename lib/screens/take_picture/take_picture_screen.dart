@@ -25,6 +25,27 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   var _flashState = FlashMode.off;
   late CameraDescription _camera = widget.camera;
 
+  final _flashIcons = <FlashMode, Icon>{
+    FlashMode.off: Icon(
+      Icons.flash_off_outlined,
+      color: Colors.white,
+      size: 24.0,
+      semanticLabel: 'Flash on',
+    ),
+    FlashMode.always: Icon(
+      Icons.flash_on_outlined,
+      color: Colors.white,
+      size: 24.0,
+      semanticLabel: 'Flash off',
+    ),
+    FlashMode.auto: Icon(
+      Icons.flash_auto_outlined,
+      color: Colors.white,
+      size: 24.0,
+      semanticLabel: 'Flash on',
+    )
+  };
+
   @override
   void initState() {
     super.initState();
@@ -55,8 +76,17 @@ class TakePictureScreenState extends State<TakePictureScreen> {
 
   _toggleFlashState() {
     setState(() {
-      _flashState =
-          _flashState == FlashMode.off ? FlashMode.always : FlashMode.off;
+      switch (_flashState) {
+        case FlashMode.off:
+          _flashState = FlashMode.always;
+          break;
+        case FlashMode.always:
+          _flashState = FlashMode.auto;
+          break;
+        default:
+          _flashState = FlashMode.off;
+          break;
+      }
     });
   }
 
@@ -66,19 +96,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       extendBodyBehindAppBar: true,
       extendBody: true,
       appBar: TopBar(
-        icon: (_flashState == FlashMode.off
-            ? Icon(
-                Icons.flash_off_outlined,
-                color: Colors.white,
-                size: 24.0,
-                semanticLabel: 'Flash on',
-              )
-            : Icon(
-                Icons.flash_on_outlined,
-                color: Colors.white,
-                size: 24.0,
-                semanticLabel: 'Flash off',
-              )),
+        icon: _flashIcons[_flashState] ?? Icon(Icons.error),
         toggleFlashState: _toggleFlashState,
       ),
       body: CameraPreviewWidget(
@@ -89,7 +107,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       bottomNavigationBar: BottomBar(
         changeCamera: _changeCamera,
         takePicture: _takePicture,
-      ), //newMethod(),
+      ),
     );
   }
 
