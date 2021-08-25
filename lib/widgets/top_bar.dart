@@ -17,19 +17,6 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
             padding: const EdgeInsets.all(0),
             alignment: Alignment.centerRight,
             icon: icon,
-            // (_flashState == FlashMode.off
-            //     ? Icon(
-            //         Icons.flash_off_outlined,
-            //         color: Colors.grey[400],
-            //         size: 24.0,
-            //         semanticLabel: 'Flash on',
-            //       )
-            //     : Icon(
-            //         Icons.flash_on_outlined,
-            //         color: Colors.grey[400],
-            //         size: 24.0,
-            //         semanticLabel: 'Flash off',
-            //       )),
             color: Colors.red[500],
             onPressed: toggleFlashState,
           ),
@@ -41,6 +28,6 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  // TODO: implement preferredSize
+  //TODO:: This needs to be thought about, I just added this on random.
   Size get preferredSize => Size(1000.0, 1000.0);
 }

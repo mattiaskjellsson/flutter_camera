@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_camera/widgets/change_camera_button.dart';
 import 'package:flutter_camera/widgets/take_picture_button.dart';
 
+import 'camera_preview_widget.dart';
 import 'dispay_picture_screen.dart';
 import 'top_bar.dart';
 
@@ -46,18 +47,14 @@ class TakePictureScreenState extends State<TakePictureScreen> {
         CameraController(description, ResolutionPreset.max, enableAudio: true);
 
     try {
-      await _controller.initialize();
-      // to notify the widgets that camera has been initialized and now camera preview can be done
+      _initializeControllerFuture = _controller.initialize();
       setState(() {});
-      print('wiiiii');
     } catch (e) {
       print(e);
     }
   }
 
   _toggleFlashState() {
-    print('update flash state $_flashState');
-
     setState(() {
       _flashState =
           _flashState == FlashMode.off ? FlashMode.always : FlashMode.off;
@@ -85,7 +82,11 @@ class TakePictureScreenState extends State<TakePictureScreen> {
               )),
         toggleFlashState: _toggleFlashState,
       ),
-      body: _buildBody(),
+      body: CameraPreviewWidget(
+        initializeControllerFuture: _initializeControllerFuture,
+        controller: _controller,
+        flashState: _flashState,
+      ),
       bottomNavigationBar: Container(
         color: Color(0x88000000),
         height: 100.0,
@@ -102,50 +103,21 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     );
   }
 
-  Widget _buildBody() {
-    return Expanded(
-      child: FutureBuilder<void>(
-        future: _initializeControllerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            _controller.setFlashMode(_flashState);
-            final scale = 1 /
-                (_controller.value.aspectRatio *
-                    MediaQuery.of(context).size.aspectRatio);
-            return Transform.scale(
-              scale: scale,
-              alignment: Alignment.topCenter,
-              child: CameraPreview(_controller),
-            );
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
-      ),
-    );
-  }
-
   _changeCamera() {
-    // setState(() async {
-    //   final cameras = await availableCameras();
-    //   cameras.forEach((element) {
-    //     print(element.toString());
-    //   });
+    try {
+      final lensDirection = _controller.description.lensDirection;
 
-    //   _camera = _camera.lensDirection == CameraLensDirection.back
-    //       ? cameras.firstWhere(
-    //           (element) => element.lensDirection == CameraLensDirection.front)
-    //       : cameras.firstWhere(
-    //           (element) => element.lensDirection == CameraLensDirection.back);
+      CameraDescription newDescription =
+          lensDirection == CameraLensDirection.front
+              ? widget.availableCameras.firstWhere((description) =>
+                  description.lensDirection == CameraLensDirection.back)
+              : widget.availableCameras.firstWhere((description) =>
+                  description.lensDirection == CameraLensDirection.front);
 
-    //   _controller = CameraController(
-    //     _camera,
-    //     ResolutionPreset.medium,
-    //   );
-
-    //   _initializeControllerFuture = _controller.initialize();
-    // });
-    _toggleCameraLens();
+      _initCamera(newDescription);
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   _takePicture() async {
@@ -162,30 +134,6 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       );
     } catch (e) {
       print(e);
-    }
-  }
-
-////////////////////////////
-  void _toggleCameraLens() {
-    try {
-      final lensDirection = _controller.description.lensDirection;
-      print('Current lens direction: ${lensDirection.toString()}');
-      print('----------------------------------------------------------------');
-      widget.availableCameras.forEach((element) {
-        print(element.toString());
-      });
-      print('----------------------------------------------------------------');
-      CameraDescription newDescription =
-          lensDirection == CameraLensDirection.front
-              ? widget.availableCameras.firstWhere((description) =>
-                  description.lensDirection == CameraLensDirection.back)
-              : widget.availableCameras.firstWhere((description) =>
-                  description.lensDirection == CameraLensDirection.front);
-
-      print('New camera description: ${newDescription.toString()}');
-      _initCamera(newDescription);
-    } catch (e) {
-      print(e.toString());
     }
   }
 }
