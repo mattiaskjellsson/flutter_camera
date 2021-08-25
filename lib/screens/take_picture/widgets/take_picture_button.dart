@@ -17,13 +17,17 @@ class _TakePictureButtonState extends State<TakePictureButton> {
         height: 80,
         width: 80,
         decoration: BoxDecoration(
-          color: Colors.blue,
+          color: Colors.white,
           borderRadius: BorderRadius.circular(80 / 2),
         ),
         child: Center(
-          child: Icon(
-            Icons.add,
-            color: Colors.white,
+          child: Container(
+            height: 72,
+            width: 72,
+            decoration: BoxDecoration(
+              color: Colors.grey,
+              borderRadius: BorderRadius.circular(72 / 2),
+            ),
           ),
         ),
       ),
