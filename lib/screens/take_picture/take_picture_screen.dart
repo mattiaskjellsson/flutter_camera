@@ -69,13 +69,13 @@ class TakePictureScreenState extends State<TakePictureScreen> {
         icon: (_flashState == FlashMode.off
             ? Icon(
                 Icons.flash_off_outlined,
-                color: Colors.grey[400],
+                color: Colors.white,
                 size: 24.0,
                 semanticLabel: 'Flash on',
               )
             : Icon(
                 Icons.flash_on_outlined,
-                color: Colors.grey[400],
+                color: Colors.white,
                 size: 24.0,
                 semanticLabel: 'Flash off',
               )),

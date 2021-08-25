@@ -17,7 +17,6 @@ class TopBar extends StatelessWidget implements PreferredSizeWidget {
             padding: const EdgeInsets.all(0),
             alignment: Alignment.centerRight,
             icon: icon,
-            color: Colors.red[500],
             onPressed: toggleFlashState,
           ),
         ),

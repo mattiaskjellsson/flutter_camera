@@ -13,10 +13,7 @@ class _ChangeCameraButtonState extends State<ChangeCameraButton> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: widget.changeCamera,
-      child: Icon(
-        Icons.change_circle_outlined,
-        size: 48,
-      ),
+      child: Icon(Icons.change_circle_outlined, size: 48, color: Colors.white),
     );
   }
 }
