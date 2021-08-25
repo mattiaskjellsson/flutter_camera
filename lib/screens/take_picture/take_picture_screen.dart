@@ -1,11 +1,10 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_camera/widgets/change_camera_button.dart';
-import 'package:flutter_camera/widgets/take_picture_button.dart';
 
-import 'camera_preview_widget.dart';
-import 'dispay_picture_screen.dart';
-import 'top_bar.dart';
+import 'widgets/camera_preview_widget.dart';
+import '../display_picture/dispay_picture_screen.dart';
+import 'widgets/top_bar.dart';
+import 'widgets/bottom_bar.dart';
 
 class TakePictureScreen extends StatefulWidget {
   const TakePictureScreen({
@@ -87,19 +86,10 @@ class TakePictureScreenState extends State<TakePictureScreen> {
         controller: _controller,
         flashState: _flashState,
       ),
-      bottomNavigationBar: Container(
-        color: Color(0x88000000),
-        height: 100.0,
-        child: Expanded(
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                TakePictureButton(takePicture: _takePicture),
-                ChangeCameraButton(changeCamera: _changeCamera)
-              ]),
-        ),
-      ),
+      bottomNavigationBar: BottomBar(
+        changeCamera: _changeCamera,
+        takePicture: _takePicture,
+      ), //newMethod(),
     );
   }
 

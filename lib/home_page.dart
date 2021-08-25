@@ -1,7 +1,8 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_camera/screens/photo_library/photo_library.dart';
 
-import 'widgets/take_picture_screen.dart';
+import 'screens/take_picture/take_picture_screen.dart';
 
 class HomePage extends StatefulWidget {
   final camera;
@@ -44,6 +45,21 @@ class _HomePageState extends State<HomePage> {
                   child: Text("Camera"),
                 ),
               ),
+              Container(
+                child: OutlinedButton(
+                  style: ButtonStyle(
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30.0))),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => PhotoLibrary()));
+                  },
+                  child: Text("Library"),
+                ),
+              )
             ],
           ),
         ),

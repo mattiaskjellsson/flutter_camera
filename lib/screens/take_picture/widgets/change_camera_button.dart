@@ -15,7 +15,7 @@ class _ChangeCameraButtonState extends State<ChangeCameraButton> {
       onTap: widget.changeCamera,
       child: Icon(
         Icons.change_circle_outlined,
-        size: 24,
+        size: 48,
       ),
     );
   }

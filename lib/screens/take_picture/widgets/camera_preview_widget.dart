@@ -36,27 +36,4 @@ class CameraPreviewWidget extends StatelessWidget {
       ),
     );
   }
-
-  // Widget _buildBody() {
-  //   return Expanded(
-  //     child: FutureBuilder<void>(
-  //       future: initializeControllerFuture,
-  //       builder: (context, snapshot) {
-  //         if (snapshot.connectionState == ConnectionState.done) {
-  //           controller.setFlashMode(flashState);
-  //           final scale = 1 /
-  //               (controller.value.aspectRatio *
-  //                   MediaQuery.of(context).size.aspectRatio);
-  //           return Transform.scale(
-  //             scale: scale,
-  //             alignment: Alignment.topCenter,
-  //             child: CameraPreview(controller),
-  //           );
-  //         } else {
-  //           return const Center(child: CircularProgressIndicator());
-  //         }
-  //       },
-  //     ),
-  //   );
-  // }
 }
