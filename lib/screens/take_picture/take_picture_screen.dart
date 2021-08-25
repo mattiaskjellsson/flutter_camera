@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart' as pathProvider;
+import 'package:path/path.dart';
 import 'widgets/camera_preview_widget.dart';
 import '../display_picture/dispay_picture_screen.dart';
 import 'widgets/top_bar.dart';
@@ -78,7 +82,66 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       ),
       bottomNavigationBar: BottomBar(
         changeCamera: _changeCamera,
-        takePicture: _takePicture,
+        takePicture: () async {
+          try {
+            await _initializeControllerFuture;
+            final image = await _controller.takePicture();
+
+            await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => DisplayPictureScreen(
+                  imagePath: image.path,
+                ),
+              ),
+            );
+          } catch (e) {
+            print(e);
+          }
+        },
+        openGallery: () async {
+          try {
+            final file =
+                await ImagePicker().pickImage(source: ImageSource.gallery);
+            print('a');
+            if (file == null) {
+              return;
+            }
+            print('b');
+            print(file.path);
+            print(file.name);
+            print('c');
+            await Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) => DisplayPictureScreen(
+                  imagePath: file.path,
+                ),
+              ),
+            );
+            print('d');
+            // print('b');
+            // final appDir =
+            //     await pathProvider.getApplicationDocumentsDirectory();
+            // print('c');
+            // final fileName = basename(file.path);
+            // print('d');
+            // await file.saveTo('${appDir.path}/$fileName');
+            // print('e');
+            // final f = File(file.path);
+            // print('f');
+            // final savedImage = await f.copy('${appDir.path}/$fileName');
+            // print('g');
+            // await Navigator.of(context).push(
+            //   MaterialPageRoute(
+            //     builder: (context) => DisplayPictureScreen(
+            //       imagePath: savedImage.path,
+            //     ),
+            //   ),
+            // );
+            print('h');
+          } catch (e) {
+            print(e.toString());
+          }
+        }, //_openGallery,
       ),
     );
   }
@@ -128,20 +191,35 @@ class TakePictureScreenState extends State<TakePictureScreen> {
     });
   }
 
-  _takePicture() async {
-    try {
-      await _initializeControllerFuture;
-      final image = await _controller.takePicture();
+  // _takePicture() async {
+  //   try {
+  //     await _initializeControllerFuture;
+  //     final image = await _controller.takePicture();
 
-      await Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => DisplayPictureScreen(
-            imagePath: image.path,
-          ),
-        ),
-      );
-    } catch (e) {
-      print(e);
+  //     await Navigator.of(context).push(
+  //       MaterialPageRoute(
+  //         builder: (context) => DisplayPictureScreen(
+  //           imagePath: image.path,
+  //         ),
+  //       ),
+  //     );
+  //   } catch (e) {
+  //     print(e);
+  //   }
+  // }
+
+  _openGallery() async {
+    final file = await ImagePicker().pickImage(source: ImageSource.gallery);
+    print('${file.toString()}');
+
+    if (file == null) {
+      return;
     }
+
+    final appDir = await pathProvider.getApplicationDocumentsDirectory();
+    final fileName = basename(file.path);
+    await file.saveTo('${appDir.path}/$fileName');
+    final f = File(file.path);
+    final savedImage = await f.copy('${appDir.path}/$fileName');
   }
 }

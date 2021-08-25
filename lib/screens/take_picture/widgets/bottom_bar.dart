@@ -7,10 +7,14 @@ import 'take_picture_button.dart';
 class BottomBar extends StatelessWidget {
   final Function() takePicture;
   final Function() changeCamera;
+  final Function() openGallery;
 
-  const BottomBar(
-      {Key? key, required this.takePicture, required this.changeCamera})
-      : super(key: key);
+  const BottomBar({
+    Key? key,
+    required this.takePicture,
+    required this.changeCamera,
+    required this.openGallery,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +27,7 @@ class BottomBar extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: <Widget>[
               Expanded(
-                child: OpenGalleryButton(openGallery: () {}),
+                child: OpenGalleryButton(openGallery: openGallery),
               ),
               TakePictureButton(takePicture: takePicture),
               Expanded(
