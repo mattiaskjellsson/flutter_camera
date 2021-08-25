@@ -15,10 +15,13 @@ class TakePictureScreen extends StatefulWidget {
     Key? key,
     required this.camera,
     required this.availableCameras,
+    required this.imagePicker,
   }) : super(key: key);
 
   final CameraDescription camera;
   final List<CameraDescription> availableCameras;
+  final ImagePicker imagePicker;
+
   @override
   TakePictureScreenState createState() => TakePictureScreenState();
 }
@@ -101,7 +104,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
         openGallery: () async {
           try {
             final file =
-                await ImagePicker().pickImage(source: ImageSource.gallery);
+                await widget.imagePicker.pickImage(source: ImageSource.gallery);
             print('a');
             if (file == null) {
               return;
