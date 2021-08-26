@@ -172,7 +172,7 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       await Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => DisplayPictureScreen(
-            imagePath: video.path,
+            videoPath: video.path,
           ),
         ),
       );
