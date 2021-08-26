@@ -8,12 +8,16 @@ class BottomBar extends StatelessWidget {
   final Function() takePicture;
   final Function() changeCamera;
   final Function() openGallery;
+  final Function() startVideoRecording;
+  final Function() stopVideoRecording;
 
   const BottomBar({
     Key? key,
     required this.takePicture,
     required this.changeCamera,
     required this.openGallery,
+    required this.startVideoRecording,
+    required this.stopVideoRecording,
   }) : super(key: key);
 
   @override
@@ -29,7 +33,11 @@ class BottomBar extends StatelessWidget {
               Expanded(
                 child: OpenGalleryButton(openGallery: openGallery),
               ),
-              TakePictureButton(takePicture: takePicture),
+              TakePictureButton(
+                takePicture: takePicture,
+                startVideoRecording: startVideoRecording,
+                stopVideoRecording: stopVideoRecording,
+              ),
               Expanded(
                 child: ChangeCameraButton(changeCamera: changeCamera),
               ),

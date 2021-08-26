@@ -5,6 +5,7 @@ import 'widgets/camera_preview_widget.dart';
 import '../display_picture/dispay_picture_screen.dart';
 import 'widgets/top_bar.dart';
 import 'widgets/bottom_bar.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 
 class TakePictureScreen extends StatefulWidget {
   const TakePictureScreen({
@@ -83,6 +84,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
         changeCamera: _changeCamera,
         takePicture: () => _takePicture(context),
         openGallery: () => _openGallery(context),
+        startVideoRecording: _startVideoRecording,
+        stopVideoRecording: () => _stopVideoRecording(context),
       ),
     );
   }
@@ -137,6 +140,8 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       await _initializeControllerFuture;
       final image = await _controller.takePicture();
 
+      GallerySaver.saveImage(image.path);
+
       await Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => DisplayPictureScreen(
@@ -146,6 +151,33 @@ class TakePictureScreenState extends State<TakePictureScreen> {
       );
     } catch (e) {
       print(e);
+    }
+  }
+
+  _startVideoRecording() async {
+    try {
+      await _initializeControllerFuture;
+      await _controller.startVideoRecording();
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  _stopVideoRecording(BuildContext context) async {
+    try {
+      final video = await _controller.stopVideoRecording();
+
+      bool? success = await GallerySaver.saveVideo(video.path);
+
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (context) => DisplayPictureScreen(
+            imagePath: video.path,
+          ),
+        ),
+      );
+    } catch (e) {
+      print(e.toString());
     }
   }
 
