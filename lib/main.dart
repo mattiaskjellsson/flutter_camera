@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_camera/home_page.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'package:flutter_camera/home_page.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

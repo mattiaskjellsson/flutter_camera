@@ -1,7 +1,8 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_camera/screens/photo_library/photo_library.dart';
 import 'package:image_picker/image_picker.dart';
+
+import 'package:flutter_camera/screens/photo_library/photo_library.dart';
 
 import 'screens/take_picture/take_picture_screen.dart';
 
