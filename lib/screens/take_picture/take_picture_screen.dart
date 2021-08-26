@@ -1,11 +1,14 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'widgets/camera_preview_widget.dart';
-import '../display_picture/dispay_picture_screen.dart';
-import 'widgets/top_bar.dart';
-import 'widgets/bottom_bar.dart';
 import 'package:gallery_saver/gallery_saver.dart';
+import 'package:image_picker/image_picker.dart';
+
+import 'package:flutter_camera/screens/photo_library/photo_library.dart';
+
+import '../display_picture/dispay_picture_screen.dart';
+import 'widgets/bottom_bar.dart';
+import 'widgets/camera_preview_widget.dart';
+import 'widgets/top_bar.dart';
 
 class TakePictureScreen extends StatefulWidget {
   const TakePictureScreen({
@@ -182,12 +185,19 @@ class TakePictureScreenState extends State<TakePictureScreen> {
   }
 
   _openGallery(BuildContext context) async {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => PhotoLibrary()));
+  }
+
+  _openImageOnlyGallery() async {
     try {
       final file =
           await widget.imagePicker.pickImage(source: ImageSource.gallery);
+
       if (file == null) {
         return;
       }
+
       await Navigator.of(context).push(
         MaterialPageRoute(
           builder: (context) => DisplayPictureScreen(
